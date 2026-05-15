@@ -1,0 +1,9 @@
+Metric,Value
+Model,Random Forest Regressor
+MAE,171639.93409296323
+RMSE,276383.57939327444
+R2,0.7835854290293838
+InputRows,27103
+PredictionRows,27103
+TrainingRows,26859
+OutOfModelScopeRows,244

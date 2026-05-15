@@ -1,0 +1,8 @@
+Metric,Value
+MAE,261282.07710595918
+RMSE,381963.4080546184
+R2,0.5970061281013128
+InputRows,27103.0
+PredictionRows,27103.0
+TrainingRows,26860.0
+ExcludedFromTrainingRows,243.0
