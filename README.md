@@ -46,11 +46,31 @@ Several property feature columns contained missing or invalid values. The most s
 
 The `BuildingArea` column also contained invalid values such as `missing` and `inf`, which were converted into null values. In addition, **11 duplicate records** were removed, reducing the dataset from **27,114 rows to 27,103 rows**.
 
-### 1.2 Why Missing Rows Were Not Fully Removed
+### 1.2 Missing Data Mechanism
 
-Although several fields had high missing-value rates, the rows were not removed entirely. Removing every row with missing values in `BuildingArea`, `YearBuilt`, `Landsize`, `Bedroom`, `Bathroom`, and `Car` would remove approximately **67.5% of the dataset**.
+The missing values were considered carefully before deciding how to handle them. In this dataset, the missingness is unlikely to be purely **MCAR (Missing Completely at Random)** because missing values are concentrated in specific property feature columns rather than being evenly distributed across the dataset.
 
-This would leave only around one-third of the original data and significantly reduce the reliability of regional, suburb-level, and time-based analysis. Instead, missing values were retained where appropriate, while specific visuals and machine learning steps handled missing values through filtering, imputation, or model-scope rules.
+For example, `BuildingArea` and `YearBuilt` have very high missing rates, while key transaction fields such as `Price`, `Suburb`, `Type`, and `Date` are mostly complete. This suggests that the missing values are more likely related to the way property information was collected or reported.
+
+The likely missing data mechanisms are:
+
+| Column | Likely Missingness Type | Explanation |
+|---|---|---|
+| BuildingArea | Likely MAR or MNAR | Building area may be missing because it was not recorded for certain property types, older properties, or listings where the information was unavailable. It may also be MNAR if larger/smaller or unusual properties are less consistently reported. |
+| YearBuilt | Likely MAR or MNAR | Year built may be missing for older properties or properties where construction information was not available. This missingness may depend on property age or listing quality. |
+| Landsize | Likely MAR | Land size may be missing more often for units, apartments, or properties where land ownership is shared or not directly applicable. |
+| Bedroom, Bathroom, Car | Likely MAR | These values may be missing due to incomplete listing information or differences in how property features were recorded by sellers or agents. |
+
+Because the missing data appears to be related to property characteristics and data collection processes, removing all rows with missing values would likely introduce bias. It would also remove a large proportion of the dataset, especially due to the high missing rates in `BuildingArea` and `YearBuilt`.
+
+Therefore, the project did not remove all missing records. Instead, missing values were handled based on context:
+
+- For dashboard analysis, records with missing values were retained where they were still useful for price, region, suburb, and property type analysis.
+- For visuals that depended on specific features, missing or invalid values were filtered only within that visual where necessary.
+- For machine learning, missing numeric values were handled using median imputation, while categorical missing values were handled using the most frequent category.
+- Extreme or unreliable records were marked as out of model scope where appropriate.
+
+This approach helped preserve the representativeness of the dataset while reducing the risk of biased analysis caused by excessive row deletion.
 
 ### 1.3 Transformation Steps
 
